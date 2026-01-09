@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Risk Analysis Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root{
+  --bg:#f5f7fb;
+  --card:#ffffff;
+  --primary:#2563eb;
+  --danger:#dc2626;
+  --warn:#d97706;
+  --success:#16a34a;
+  --text:#0f172a;
+  --muted:#64748b;
+}
+
+*{box-sizing:border-box;font-family:Inter,system-ui}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+}
+
+.app{display:flex;height:100vh}
+
+/* ===== SIDEBAR ===== */
+.sidebar{
+  width:230px;
+  background:#fff;
+  border-right:1px solid #e5e7eb;
+  padding:24px;
+}
+.logo{
+  font-weight:800;
+  color:var(--primary);
+  margin-bottom:32px;
+}
+.nav{padding:12px;border-radius:10px;color:#475569;margin-bottom:6px}
+.nav.active{background:#e0edff;color:var(--primary);font-weight:600}
+
+/* ===== MAIN ===== */
+.main{
+  flex:1;
+  padding:28px;
+  overflow:auto;
+}
+
+/* ===== HERO ===== */
+.hero{
+  display:grid;
+  grid-template-columns:280px 1fr;
+  gap:24px;
+  margin-bottom:28px;
+}
+
+.risk-score{
+  background:linear-gradient(135deg,#fee2e2,#fff);
+  border-radius:24px;
+  padding:24px;
+  box-shadow:0 12px 30px rgba(0,0,0,.08);
+  text-align:center;
+}
+
+.score{
+  font-size:64px;
+  font-weight:900;
+  color:var(--danger);
+}
+.score span{font-size:18px;color:var(--muted)}
+
+.badge{
+  display:inline-block;
+  margin-top:6px;
+  padding:6px 12px;
+  border-radius:20px;
+  background:#fee2e2;
+  color:var(--danger);
+  font-weight:600;
+}
+
+.calc-btn{
+  margin-top:14px;
+  padding:10px 14px;
+  border-radius:10px;
+  border:none;
+  background:var(--primary);
+  color:#fff;
+  cursor:pointer;
+}
+
+/* ===== KPI MATRIX ===== */
+.matrix{
+  background:var(--card);
+  border-radius:24px;
+  padding:22px;
+  box-shadow:0 10px 25px rgba(0,0,0,.07);
+}
+
+.matrix h3{
+  margin-bottom:14px;
+  color:var(--primary);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:16px;
+}
+
+.card{
+  background:#f8fafc;
+  border-radius:16px;
+  padding:16px;
+}
+
+.card h4{
+  font-size:13px;
+  color:var(--muted);
+}
+
+.card .v{
+  font-size:22px;
+  font-weight:700;
+}
+
+.meta{
+  font-size:11px;
+  color:var(--muted);
+  display:flex;
+  justify-content:space-between;
+  margin-top:6px;
+}
+
+/* ===== MODAL ===== */
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(15,23,42,.4);
+  display:none;
+  align-items:center;
+  justify-content:center;
+}
+
+.modal-box{
+  background:#fff;
+  border-radius:20px;
+  padding:24px;
+  width:520px;
+}
+
+.modal h3{margin-bottom:12px}
+.modal pre{
+  background:#f1f5f9;
+  padding:14px;
+  border-radius:12px;
+  font-size:13px;
+  overflow:auto;
+}
+.close{
+  margin-top:14px;
+  padding:10px 14px;
+  border:none;
+  background:#e5e7eb;
+  border-radius:10px;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="logo">ALTAMETRICS AI</div>
+    <div class="nav">Store Health</div>
+    <div class="nav">Compliance</div>
+    <div class="nav active">Risk Analysis</div>
+    <div class="nav">Time Loss</div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="risk-score">
+        <div class="score">78<span>/100</span></div>
+        <div class="badge">CRITICAL RISK</div>
+        <button class="calc-btn" onclick="openCalc()">How is this calculated?</button>
+      </div>
+
+      <div class="matrix">
+        <h3>Unified Risk Matrix</h3>
+        <div class="grid">
+
+          <!-- TOP -->
+          <div class="card"><h4>Critical Violations</h4><div class="v">14</div></div>
+          <div class="card"><h4>Est. Exposure</h4><div class="v">$142.5k</div></div>
+          <div class="card"><h4>Scheduling Risk</h4><div class="v">85 / 100</div></div>
+          <div class="card"><h4>Inventory Loss</h4><div class="v">4.2%</div></div>
+
+          <!-- INVENTORY -->
+          <div class="card"><h4>Waste Cost</h4><div class="v">$1,240</div></div>
+          <div class="card"><h4>Variance (Act vs Theo)</h4><div class="v">-2.5%</div></div>
+          <div class="card"><h4>Stockouts</h4><div class="v">5</div></div>
+          <div class="card"><h4>Shrinkage</h4><div class="v">1.8%</div></div>
+
+          <!-- LABOR -->
+          <div class="card"><h4>Overtime Cost</h4><div class="v">$3,450</div></div>
+          <div class="card"><h4>Minor Violations</h4><div class="v">8</div></div>
+          <div class="card"><h4>Late Clock-ins</h4><div class="v">15</div></div>
+          <div class="card"><h4>Early Clock-outs</h4><div class="v">7</div></div>
+
+          <!-- SCHEDULE -->
+          <div class="card"><h4>Unassigned Shifts</h4><div class="v">4</div></div>
+          <div class="card"><h4>Availability Conflicts</h4><div class="v">6</div></div>
+          <div class="card"><h4>Overscheduling</h4><div class="v">12 hrs</div></div>
+          <div class="card"><h4>Underscheduling</h4><div class="v">8 hrs</div></div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CALCULATION MODAL -->
+<div class="modal" id="calc">
+  <div class="modal-box">
+    <h3>Risk Score Calculation</h3>
+    <pre>
+Overall Risk Score =
+  (Inventory Risk × 30%)
++ (Labor Risk × 30%)
++ (Schedule Risk × 25%)
++ (Compliance Risk × 15%)
+
+Inventory Risk Inputs:
+  Waste Cost = $1,240
+  Variance = -2.5%
+  Shrinkage = 1.8%
+  Stockouts = 5
+
+Labor Risk Inputs:
+  Overtime = $3,450
+  Violations = 8
+  Late Clock-ins = 15
+  Early Clock-outs = 7
+
+Schedule Risk Inputs:
+  Unassigned Shifts = 4
+  Over/Under Scheduling = 20 hrs
+
+Final Normalized Score = 78 / 100
+    </pre>
+    <button class="close" onclick="closeCalc()">Close</button>
+  </div>
+</div>
+
+<script>
+function openCalc(){document.getElementById('calc').style.display='flex'}
+function closeCalc(){document.getElementById('calc').style.display='none'}
+</script>
+
+</body>
+</html>
